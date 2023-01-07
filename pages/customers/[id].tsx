@@ -5,6 +5,8 @@ import axios from "axios";
 import { ParsedUrlQuery } from "querystring";
 import clientPromise from "../../lib/mongodb";
 import { ObjectId } from "mongodb";
+import { BSONTypeError } from "bson";
+import { getCustomer } from "../api/customers/[id]";
 
 type Props = {
   customer: Customer;
@@ -15,17 +17,10 @@ interface Params extends ParsedUrlQuery {
 }
 
 export const getStaticPaths = async () => {
-  const result = await axios.get("http://127.0.0.1:8000/api/customers");
-  const paths = result.data.customers.map((customer: Customer) => {
-    return {
-      params: {
-        id: customer._id.toString(),
-      },
-    };
-  });
-
+  // const result = await clientPromise;
+  // const paths = result;
   return {
-    paths: paths,
+    paths: [],
     fallback: true,
   };
 };
@@ -34,24 +29,29 @@ export const getStaticProps: GetStaticProps<Props, Params> = async (
   context
 ) => {
   const params = context.params!;
-  const mongoClient = await clientPromise;
-
-  const data = (await mongoClient
-    .db()
-    .collection("customers")
-    .findOne({ _id: new ObjectId(params.id) })) as Customer;
-  console.log("haha", data);
-  if (!data) {
+  try {
+    const data = await getCustomer(params.id);
+    if (!data) {
+      return {
+        notFound: true,
+        revalidate: 60,
+      };
+    }
     return {
-      notFound: true,
+      props: {
+        customer: JSON.parse(JSON.stringify(data)),
+      },
+      revalidate: 60,
     };
+  } catch (e) {
+    console.log(e);
+    if (e instanceof BSONTypeError) {
+      return {
+        notFound: true,
+      };
+    }
+    throw e;
   }
-  return {
-    props: {
-      customer: JSON.parse(JSON.stringify(data)),
-    },
-    revalidate: 60,
-  };
 };
 
 const Customer: NextPage<Props> = (props) => {
