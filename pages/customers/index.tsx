@@ -1,21 +1,23 @@
 import { GetStaticProps, InferGetStaticPropsType, NextPage } from "next";
 import axios from "axios";
+import { MongoClient, ObjectId } from "mongodb";
+import clientPromise from "../../lib/mongodb";
 
-type Customer = {
-  id: number;
+export type Customer = {
+  _id: ObjectId;
   name: string;
   industry: string;
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const result = await axios.get<{
-    customers: Customer[];
-  }>("http://127.0.0.1:8000/api/customers/");
-  console.log(result.data.customers);
+  const mongoClient = await clientPromise;
+
+  const data = await mongoClient.db().collection("customers").find().toArray();
+  console.log("hehe", data);
 
   return {
     props: {
-      customers: result.data.customers,
+      customers: JSON.parse(JSON.stringify(data)),
     },
     revalidate: 60,
   };
@@ -24,15 +26,15 @@ export const getStaticProps: GetStaticProps = async (context) => {
 const Customers: NextPage = ({
   customers,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  //console.log(customers);
   return (
     <>
       <div>
         <h4>Customers</h4>
         {customers.map((customer: Customer) => {
           return (
-            <div key={customer.id}>
+            <div key={customer._id.toString()}>
               <br></br>
+              <p>{customer._id.toString()}</p>
               <p>{customer.name}</p>
               <p>{customer.industry}</p>
             </div>
