@@ -3,7 +3,6 @@ import { Raleway } from "@next/font/google";
 import { ObjectId } from "mongodb";
 import type { NextApiRequest, NextApiResponse } from "next";
 import clientPromise from "../../../lib/mongodb";
-
 import { Customer } from "../../customers/index";
 import NextCors from "nextjs-cors";
 
