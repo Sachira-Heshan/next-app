@@ -4,11 +4,12 @@ import Tooltip from "@mui/material/Tooltip";
 import PersonIcon from "@mui/icons-material/Person";
 
 import { Customer } from "../pages/customers/index";
+import Grid from "@mui/material/Grid";
 
 const Customer = ({ customer }: { customer: Customer }) => {
   return (
-    <>
-      <div key={customer._id?.toString()} style={{ marginBottom: 20 }}>
+    <Grid item>
+      <div key={customer._id?.toString()}>
         <br></br>
         <span
           style={{
@@ -25,7 +26,7 @@ const Customer = ({ customer }: { customer: Customer }) => {
         <p>{customer.industry}</p>
         <Button variant="contained">View Orders</Button>
       </div>
-    </>
+    </Grid>
   );
 };
 

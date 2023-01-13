@@ -1,15 +1,12 @@
 import { GetStaticProps, InferGetStaticPropsType, NextPage } from "next";
 import axios from "axios";
-import { MongoClient, ObjectId } from "mongodb";
-import clientPromise from "../../lib/mongodb";
+import { ObjectId } from "mongodb";
 import { getCustomers } from "../api/customers/index";
 import { useQuery } from "react-query";
 
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-
-import PersonIcon from "@mui/icons-material/Person";
 import CustomerComponent from "../../components/Customer";
+import Grid from "@mui/material/Grid";
+import Container from "@mui/material/Container";
 
 export type Customer = {
   _id?: ObjectId;
@@ -44,17 +41,18 @@ const Customers: NextPage = ({
   if (customers) {
     return (
       <>
-        <div>
-          <h4>Customers</h4>
-          {customers.map((customer: Customer) => {
-            return (
-              <CustomerComponent
-                key={customer._id?.toString()}
-                customer={customer}
-              />
-            );
-          })}
-        </div>
+        <Container>
+          <Grid container spacing={3} sx={{ mt: 1 }}>
+            {customers.map((customer: Customer) => {
+              return (
+                <CustomerComponent
+                  key={customer._id?.toString()}
+                  customer={customer}
+                />
+              );
+            })}
+          </Grid>
+        </Container>
       </>
     );
   }
