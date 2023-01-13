@@ -53,6 +53,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const data = await editCustomer(id as string, {
       name: req.body.name,
       industry: req.body.industry,
+      orders: req.body.orders,
     });
     res.status(200).json({ modifiedCount: data.modifiedCount });
   } else if (req.method === "DELETE") {

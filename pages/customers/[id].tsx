@@ -1,10 +1,7 @@
 import { GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { Customer } from "./index";
-import axios from "axios";
 import { ParsedUrlQuery } from "querystring";
-import clientPromise from "../../lib/mongodb";
-import { ObjectId } from "mongodb";
 import { BSONTypeError } from "bson";
 import { getCustomer } from "../api/customers/[id]";
 

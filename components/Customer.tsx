@@ -5,6 +5,7 @@ import PersonIcon from "@mui/icons-material/Person";
 
 import { Customer } from "../pages/customers/index";
 import Grid from "@mui/material/Grid";
+import Link from "next/link";
 
 const Customer = ({ customer }: { customer: Customer }) => {
   return (
@@ -24,7 +25,17 @@ const Customer = ({ customer }: { customer: Customer }) => {
           {customer.name}
         </span>
         <p>{customer.industry}</p>
-        <Button variant="contained">View Orders</Button>
+        <Link
+          style={{ textDecoration: "none" }}
+          href={{
+            pathname: "/orders",
+            query: {
+              customerId: customer._id?.toString(),
+            },
+          }}
+        >
+          <Button variant="contained">View Orders</Button>
+        </Link>
       </div>
     </Grid>
   );
